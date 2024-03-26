@@ -1,0 +1,61 @@
+services:
+  postgres-db:
+    image: postgres:16.2-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=wO2VGDsMKR
+      - max_wal_size=2GB
+    ports:
+      - '5432:5432'
+    networks:
+      - network
+    volumes: 
+      - postgres-db-16-2:/var/lib/postgresql/data-16-2
+  ############################
+  # Workflow App + Dapr sidecar
+  ############################
+  workflow-app:
+    build:
+      context: .
+      dockerfile: src/Dockerfile
+    ports:
+      - "3500:3500" # only important so we can reach the Dapr HTTP sidecar from the host for testing purposes
+      - "5113:5111"
+      - "7777:7776"
+    depends_on:
+      - placement
+    networks:
+      - network
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+  workflow-dapr:
+    image: "daprio/daprd:1.13.0"
+    command: ["./daprd",
+     "-app-id", "workflow-app",
+     "-app-port", "5111",
+     "-placement-host-address", "placement:50006",
+     "-resources-path", "/components",
+     "-enable-profiling",
+     "-profile-port","7776"]
+    volumes:
+        - "./src/DaprComponents/:/components"
+    depends_on:
+      postgres-db:
+        condition: service_started
+    network_mode: "service:workflow-app"
+  ############################
+  # Dapr placement service
+  ############################
+  placement:
+    image: "daprio/dapr:1.13.0"
+    command: ["./placement", 
+      "-port", "50006",
+      "-log-level","warn"]
+    networks:
+      - network
+networks:
+  network:
+volumes:
+  postgres-db-16-2:
+    driver: local

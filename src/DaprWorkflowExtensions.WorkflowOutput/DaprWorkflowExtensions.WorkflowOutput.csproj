@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PackageId>DaprWorkflowExtensions.WorkflowOutput</PackageId>
+    <Title>An opinionated model to reduce boilerplate associated with serializing and deserialising the Dapr Workflow output</Title>
+    <Version>0.1.0-preview4</Version>
+    <Authors>Oliver Tomlinson</Authors>
+    <Company>Oliver Tomlinson</Company>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>icon.png</PackageIcon>
+    <RepositoryUrl>https://github.com/olitomlinson/dapr-workflow-extensions-dotnet</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <Tags>Dapr;Workflows;Workflow;</Tags>
+    <Copyright>Copyright (c) 2024 Oliver Tomlinson and other authors.</Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapr.Workflow" Version="1.13.0" />
+    <None Include="README.md" Pack="true" PackagePath="\"/>
+    <None Include="icon.png" Pack="true" PackagePath="\"/>
+  </ItemGroup>
+
+</Project>
